@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestRegressor
@@ -21,7 +22,10 @@ st.write("This app uses **KMeans clustering + Random Forest regression**")
 # -----------------------------
 @st.cache_data
 def load_data():
-    return pd.read_csv("housing.csv")
+   DATA_PATH = Path(__file__).parent / "housing.csv"
+    df = pd.read_csv(DATA_PATH)
+    df.columns = df.columns.str.strip()  # remove spaces
+    return df
 
 df = load_data()
 
