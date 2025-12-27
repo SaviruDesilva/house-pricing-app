@@ -84,7 +84,7 @@ st.pyplot(fig3)
 # -----------------------------
 st.subheader("🤖 Model Training")
 
-df1 = pd.read_csv("housepricing/housing.csv")
+df1 = pd.read_csv("housing.csv")
 
 # Strip spaces first to be safe
 df1.columns = df1.columns.str.strip()
