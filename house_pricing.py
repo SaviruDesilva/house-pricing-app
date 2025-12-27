@@ -21,11 +21,10 @@ st.write("This app uses **KMeans clustering + Random Forest regression**")
 # Load data
 # -----------------------------
 @st.cache_data
-def load_data():
-    DATA_PATH = Path(__file__).parent / "housing.csv"
-    df = pd.read_csv(DATA_PATH)
-    df.columns = df.columns.str.strip()  
-    return df
+def load_data():    
+
+return pd.read_csv("housing.csv")
+
 
 df = load_data()
 
