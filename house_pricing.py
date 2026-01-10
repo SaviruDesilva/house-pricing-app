@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from pathlib import Path
+import joblib
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestRegressor
@@ -21,8 +21,8 @@ st.write("This app uses **KMeans clustering + Random Forest regression**")
 # Load data
 # -----------------------------
 @st.cache_data
-def load_data():    
- return pd.read_csv("housing.csv")
+def load_data():
+    return pd.read_csv("housepricing/housing.csv")
 
 df = load_data()
 
@@ -85,7 +85,7 @@ st.pyplot(fig3)
 # -----------------------------
 st.subheader("🤖 Model Training")
 
-df1 = pd.read_csv("housing.csv")
+df1 = pd.read_csv("housepricing/housing.csv")
 
 # Strip spaces first to be safe
 df1.columns = df1.columns.str.strip()
@@ -109,11 +109,18 @@ X_test_scaled = ss.transform(X_test)
 rf = RandomForestRegressor(n_estimators=100, random_state=42)
 rf.fit(X_train_scaled, y_train)
 
+joblib.dump(rf, "rf_model.pkl")
+joblib.dump(ss, "scaler.pkl")
+
 y_pred = rf.predict(X_test_scaled)
 r2 = r2_score(y_test, y_pred)
 
 st.success(f"✅ Model trained successfully")
 st.metric("R² Score", round(r2, 3))
+
+# Load model and scaler
+rf_job = joblib.load("rf_model.pkl")
+scaler_job = joblib.load("scaler.pkl")
 
 # -----------------------------
 # User Prediction
@@ -135,8 +142,12 @@ with col2:
 
 if st.button("🔮 Predict Price"):
     input_data = [[age, rooms, bedrooms, population, households, income, cluster]]
-    input_scaled = ss.transform(input_data)
-    prediction = rf.predict(input_scaled)
 
-    st.success(f"💰 Predicted House Value: **${prediction[0]:,.2f}**")
+    # scale_predec (your variable, now correct)
+    scale_predec = scaler_job.transform(input_data)
+
+    # job.predict(...)
+    predc = rf_job.predict(scale_predec)
+
+    st.success(f"💰 Predicted House Value: **${predc[0]:,.2f}**")
 
